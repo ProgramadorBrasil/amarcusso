@@ -1,0 +1,1600 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adriano Marcusso | Linoleum Printmaking</title>
+    <meta name="description" content="Adriano Marcusso - Artista visual brasileiro especializado em Linoleum Printmaking, Xilogravura e Gravura em madeira. Arte original feita à mão.">
+    <meta name="keywords" content="Adriano Marcusso, printmaking, linoleum, xilogravura, gravura, arte brasileira, linóleo, woodcut">
+    <meta property="og:title" content="Adriano Marcusso | Linoleum Printmaking">
+    <meta property="og:description" content="Arte original em linóleo e xilogravura. Cada peça é única, feita à mão com dedicação artesanal.">
+    <meta property="og:type" content="website">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* ===== RESET & BASE ===== */
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --ink-black: #0a0a0a;
+            --paper-white: #f5f0e8;
+            --paper-cream: #e8e0d0;
+            --accent-copper: #c47a3a;
+            --accent-rust: #a0522d;
+            --accent-warm: #d4956a;
+            --wood-brown: #3e2723;
+            --deep-charcoal: #1a1a1a;
+            --text-light: #b8b0a0;
+            --grain-opacity: 0.03;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            font-size: 16px;
+            scrollbar-width: thin;
+            scrollbar-color: var(--accent-copper) var(--ink-black);
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: var(--ink-black);
+            color: var(--paper-white);
+            overflow-x: hidden;
+            cursor: default;
+        }
+
+        /* ===== CUSTOM CURSOR ===== */
+        .cursor-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--accent-copper);
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 10000;
+            transition: transform 0.1s;
+            mix-blend-mode: difference;
+        }
+
+        .cursor-ring {
+            width: 40px;
+            height: 40px;
+            border: 1.5px solid var(--accent-copper);
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 10000;
+            transition: all 0.15s ease-out;
+            mix-blend-mode: difference;
+        }
+
+        .cursor-ring.hover {
+            transform: scale(1.8);
+            border-color: var(--paper-white);
+            background: rgba(196, 122, 58, 0.1);
+        }
+
+        /* ===== LOADER ===== */
+        .loader {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: var(--ink-black);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            transition: opacity 0.8s cubic-bezier(0.65, 0, 0.35, 1),
+                        visibility 0.8s;
+        }
+
+        .loader.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .loader-line {
+            width: 120px;
+            height: 2px;
+            background: var(--wood-brown);
+            position: relative;
+            overflow: hidden;
+            border-radius: 2px;
+        }
+
+        .loader-line::after {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, var(--accent-copper), var(--paper-white));
+            animation: loading 1.5s ease-in-out infinite;
+        }
+
+        @keyframes loading {
+            to { left: 100%; }
+        }
+
+        .loader-text {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.7rem;
+            letter-spacing: 6px;
+            text-transform: uppercase;
+            color: var(--text-light);
+            margin-top: 24px;
+            opacity: 0.6;
+        }
+
+        /* ===== GRAIN TEXTURE OVERLAY ===== */
+        .grain {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 9998;
+            opacity: var(--grain-opacity);
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+            background-repeat: repeat;
+            background-size: 256px 256px;
+        }
+
+        /* ===== NAVIGATION ===== */
+        .nav {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%;
+            padding: 24px 48px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            transition: all 0.4s cubic-bezier(0.65, 0, 0.35, 1);
+            background: transparent;
+        }
+
+        .nav.scrolled {
+            background: rgba(10, 10, 10, 0.92);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            padding: 16px 48px;
+            border-bottom: 1px solid rgba(196, 122, 58, 0.1);
+        }
+
+        .nav-logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--paper-white);
+            text-decoration: none;
+            letter-spacing: 1px;
+        }
+
+        .nav-logo span {
+            color: var(--accent-copper);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 36px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.78rem;
+            font-weight: 400;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--text-light);
+            text-decoration: none;
+            position: relative;
+            transition: color 0.3s;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px; left: 0;
+            width: 0; height: 1px;
+            background: var(--accent-copper);
+            transition: width 0.3s cubic-bezier(0.65, 0, 0.35, 1);
+        }
+
+        .nav-links a:hover { color: var(--paper-white); }
+        .nav-links a:hover::after { width: 100%; }
+
+        .nav-cta {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.75rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--ink-black) !important;
+            background: var(--accent-copper);
+            padding: 10px 24px;
+            text-decoration: none;
+            transition: all 0.3s;
+            border: 1px solid var(--accent-copper);
+        }
+
+        .nav-cta:hover {
+            background: transparent;
+            color: var(--accent-copper) !important;
+        }
+
+        .nav-cta::after { display: none !important; }
+
+        /* Mobile menu */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+            z-index: 1001;
+        }
+
+        .hamburger span {
+            width: 28px;
+            height: 1.5px;
+            background: var(--paper-white);
+            transition: all 0.3s;
+        }
+
+        .hamburger.active span:nth-child(1) { transform: rotate(45deg) translate(4px, 5px); }
+        .hamburger.active span:nth-child(2) { opacity: 0; }
+        .hamburger.active span:nth-child(3) { transform: rotate(-45deg) translate(4px, -5px); }
+
+        /* ===== HERO SECTION ===== */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-bg {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background:
+                radial-gradient(ellipse at 20% 50%, rgba(196, 122, 58, 0.08) 0%, transparent 60%),
+                radial-gradient(ellipse at 80% 20%, rgba(62, 39, 35, 0.15) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 80%, rgba(160, 82, 45, 0.06) 0%, transparent 60%);
+        }
+
+        .hero-lines {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            overflow: hidden;
+            opacity: 0.04;
+        }
+
+        .hero-lines::before,
+        .hero-lines::after {
+            content: '';
+            position: absolute;
+            background: var(--paper-white);
+        }
+
+        .hero-lines::before {
+            top: 0; left: 15%;
+            width: 1px; height: 100%;
+        }
+
+        .hero-lines::after {
+            top: 0; right: 15%;
+            width: 1px; height: 100%;
+        }
+
+        .hero-content {
+            text-align: center;
+            z-index: 2;
+            padding: 0 24px;
+        }
+
+        .hero-overline {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.7rem;
+            font-weight: 400;
+            letter-spacing: 8px;
+            text-transform: uppercase;
+            color: var(--accent-copper);
+            margin-bottom: 32px;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeUp 1s 0.5s forwards;
+        }
+
+        .hero-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(3rem, 8vw, 8rem);
+            font-weight: 900;
+            line-height: 0.95;
+            color: var(--paper-white);
+            margin-bottom: 8px;
+            opacity: 0;
+            transform: translateY(40px);
+            animation: fadeUp 1.2s 0.7s forwards;
+        }
+
+        .hero-title .highlight {
+            color: transparent;
+            -webkit-text-stroke: 1.5px var(--accent-copper);
+            display: block;
+            font-style: italic;
+        }
+
+        .hero-subtitle {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(0.85rem, 1.5vw, 1.1rem);
+            font-weight: 300;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--text-light);
+            margin-top: 24px;
+            margin-bottom: 48px;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeUp 1s 1s forwards;
+        }
+
+        .hero-cta-group {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeUp 1s 1.3s forwards;
+        }
+
+        .btn-primary {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.78rem;
+            font-weight: 500;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--ink-black);
+            background: var(--accent-copper);
+            padding: 16px 40px;
+            text-decoration: none;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn-primary:hover::before { left: 100%; }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(196, 122, 58, 0.3); }
+
+        .btn-outline {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.78rem;
+            font-weight: 500;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--paper-white);
+            background: transparent;
+            padding: 16px 40px;
+            text-decoration: none;
+            border: 1px solid rgba(245, 240, 232, 0.2);
+            transition: all 0.4s;
+            cursor: pointer;
+        }
+
+        .btn-outline:hover {
+            border-color: var(--accent-copper);
+            color: var(--accent-copper);
+            transform: translateY(-2px);
+        }
+
+        .hero-scroll {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            opacity: 0;
+            animation: fadeUp 1s 1.8s forwards;
+        }
+
+        .hero-scroll span {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.6rem;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--text-light);
+        }
+
+        .scroll-line {
+            width: 1px;
+            height: 40px;
+            background: linear-gradient(to bottom, var(--accent-copper), transparent);
+            animation: scrollPulse 2s infinite;
+        }
+
+        @keyframes scrollPulse {
+            0%, 100% { opacity: 1; transform: scaleY(1); }
+            50% { opacity: 0.3; transform: scaleY(0.6); }
+        }
+
+        @keyframes fadeUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ===== SECTION COMMONS ===== */
+        section {
+            padding: 120px 0;
+            position: relative;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 48px;
+        }
+
+        .section-label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.65rem;
+            font-weight: 500;
+            letter-spacing: 6px;
+            text-transform: uppercase;
+            color: var(--accent-copper);
+            margin-bottom: 16px;
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2rem, 4vw, 3.5rem);
+            font-weight: 700;
+            line-height: 1.15;
+            color: var(--paper-white);
+            margin-bottom: 24px;
+        }
+
+        .section-desc {
+            font-size: 1rem;
+            font-weight: 300;
+            line-height: 1.8;
+            color: var(--text-light);
+            max-width: 560px;
+        }
+
+        .divider {
+            width: 60px;
+            height: 1px;
+            background: var(--accent-copper);
+            margin: 40px 0;
+        }
+
+        /* ===== ABOUT SECTION ===== */
+        .about {
+            background: var(--deep-charcoal);
+        }
+
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 80px;
+            align-items: center;
+        }
+
+        .about-image {
+            position: relative;
+        }
+
+        .about-image-frame {
+            position: relative;
+            overflow: hidden;
+            aspect-ratio: 4/5;
+        }
+
+        .about-image-frame::before {
+            content: '';
+            position: absolute;
+            top: -20px; left: -20px;
+            width: calc(100% + 40px);
+            height: calc(100% + 40px);
+            border: 1px solid rgba(196, 122, 58, 0.15);
+            z-index: -1;
+        }
+
+        .about-image-frame img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: grayscale(20%) contrast(1.05);
+            transition: all 0.6s;
+        }
+
+        .about-image-frame:hover img {
+            filter: grayscale(0%) contrast(1.1);
+            transform: scale(1.03);
+        }
+
+        .about-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 32px;
+            margin-top: 48px;
+        }
+
+        .stat {
+            text-align: center;
+            padding: 24px 0;
+            border-top: 1px solid rgba(196, 122, 58, 0.15);
+        }
+
+        .stat-number {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--accent-copper);
+            line-height: 1;
+        }
+
+        .stat-label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.65rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--text-light);
+            margin-top: 8px;
+        }
+
+        /* ===== TECHNIQUE SECTION ===== */
+        .technique {
+            background: var(--ink-black);
+            overflow: hidden;
+        }
+
+        .technique-cards {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 32px;
+            margin-top: 60px;
+        }
+
+        .tech-card {
+            padding: 48px 36px;
+            border: 1px solid rgba(245, 240, 232, 0.06);
+            transition: all 0.5s cubic-bezier(0.65, 0, 0.35, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tech-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 3px;
+            background: linear-gradient(90deg, var(--accent-copper), var(--accent-rust));
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.5s cubic-bezier(0.65, 0, 0.35, 1);
+        }
+
+        .tech-card:hover {
+            border-color: rgba(196, 122, 58, 0.2);
+            transform: translateY(-8px);
+            background: rgba(196, 122, 58, 0.03);
+        }
+
+        .tech-card:hover::before { transform: scaleX(1); }
+
+        .tech-icon {
+            width: 48px;
+            height: 48px;
+            margin-bottom: 24px;
+            color: var(--accent-copper);
+        }
+
+        .tech-card h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 16px;
+            color: var(--paper-white);
+        }
+
+        .tech-card p {
+            font-size: 0.9rem;
+            font-weight: 300;
+            line-height: 1.7;
+            color: var(--text-light);
+        }
+
+        /* ===== GALLERY / WORKS - INSTAGRAM EMBEDS ===== */
+        .works {
+            background: var(--deep-charcoal);
+            padding: 120px 0 80px;
+        }
+
+        .works-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .works-header .section-desc {
+            margin: 0 auto;
+        }
+
+        .embeds-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            padding: 0 48px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .embeds-grid .embed-card {
+            background: rgba(245, 240, 232, 0.03);
+            border: 1px solid rgba(196, 122, 58, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+            transition: all 0.5s cubic-bezier(0.65, 0, 0.35, 1);
+        }
+
+        .embeds-grid .embed-card:hover {
+            border-color: rgba(196, 122, 58, 0.3);
+            transform: translateY(-6px);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.4);
+        }
+
+        .embeds-grid .embed-card iframe {
+            width: 100%;
+            border: none;
+            min-height: 480px;
+        }
+
+        .embeds-grid .embed-card blockquote {
+            margin: 0 !important;
+            padding: 0 !important;
+            border: none !important;
+            max-width: 100% !important;
+            min-width: 100% !important;
+            width: 100% !important;
+        }
+
+        .gallery-more {
+            text-align: center;
+            margin-top: 60px;
+            padding: 0 48px;
+        }
+
+        /* ===== INSTAGRAM CTA SECTION ===== */
+        .instagram-section {
+            background: var(--ink-black);
+            padding: 120px 0;
+            text-align: center;
+        }
+
+        .instagram-section .section-desc {
+            margin: 0 auto 60px;
+            text-align: center;
+        }
+
+        .instagram-profile-embed {
+            max-width: 540px;
+            margin: 0 auto 48px;
+        }
+
+        .instagram-cta {
+            margin-top: 48px;
+        }
+
+        .instagram-handle {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: var(--paper-white);
+            text-decoration: none;
+            padding: 16px 36px;
+            border: 1px solid rgba(196, 122, 58, 0.3);
+            transition: all 0.4s;
+        }
+
+        .instagram-handle:hover {
+            background: var(--accent-copper);
+            color: var(--ink-black);
+            border-color: var(--accent-copper);
+            transform: translateY(-3px);
+            box-shadow: 0 12px 40px rgba(196, 122, 58, 0.25);
+        }
+
+        .instagram-handle svg {
+            width: 22px;
+            height: 22px;
+        }
+
+        @media (max-width: 1024px) {
+            .embeds-grid { grid-template-columns: repeat(2, 1fr); gap: 16px; }
+        }
+        @media (max-width: 768px) {
+            .embeds-grid { grid-template-columns: 1fr; gap: 16px; padding: 0 16px; }
+        }
+
+        /* ===== PROCESS SECTION ===== */
+        .process {
+            background: var(--deep-charcoal);
+        }
+
+        .process-steps {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2px;
+            margin-top: 60px;
+        }
+
+        .process-step {
+            padding: 48px 32px;
+            background: rgba(10, 10, 10, 0.5);
+            position: relative;
+            transition: all 0.4s;
+        }
+
+        .process-step:hover {
+            background: rgba(196, 122, 58, 0.05);
+        }
+
+        .step-num {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            font-weight: 900;
+            color: rgba(196, 122, 58, 0.15);
+            line-height: 1;
+            margin-bottom: 24px;
+        }
+
+        .process-step h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--paper-white);
+            margin-bottom: 12px;
+        }
+
+        .process-step p {
+            font-size: 0.85rem;
+            font-weight: 300;
+            line-height: 1.7;
+            color: var(--text-light);
+        }
+
+        /* ===== MARQUEE ===== */
+        .marquee-section {
+            padding: 60px 0;
+            overflow: hidden;
+            border-top: 1px solid rgba(245, 240, 232, 0.04);
+            border-bottom: 1px solid rgba(245, 240, 232, 0.04);
+            background: var(--ink-black);
+        }
+
+        .marquee-track {
+            display: flex;
+            animation: marquee 30s linear infinite;
+            white-space: nowrap;
+        }
+
+        .marquee-item {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2rem, 5vw, 4rem);
+            font-weight: 900;
+            color: transparent;
+            -webkit-text-stroke: 1px rgba(245, 240, 232, 0.08);
+            padding: 0 40px;
+            flex-shrink: 0;
+        }
+
+        .marquee-item .dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background: var(--accent-copper);
+            border-radius: 50%;
+            margin: 0 30px;
+            vertical-align: middle;
+        }
+
+        @keyframes marquee {
+            to { transform: translateX(-50%); }
+        }
+
+        /* ===== CONTACT / CTA SECTION ===== */
+        .contact {
+            background: var(--ink-black);
+            text-align: center;
+            padding: 140px 0;
+            position: relative;
+        }
+
+        .contact-bg-text {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(5rem, 15vw, 14rem);
+            font-weight: 900;
+            color: transparent;
+            -webkit-text-stroke: 1px rgba(245, 240, 232, 0.03);
+            white-space: nowrap;
+            pointer-events: none;
+        }
+
+        .contact .section-desc {
+            margin: 0 auto 48px;
+            text-align: center;
+        }
+
+        .contact-methods {
+            display: flex;
+            justify-content: center;
+            gap: 48px;
+            margin-bottom: 48px;
+            flex-wrap: wrap;
+        }
+
+        .contact-method {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.85rem;
+            color: var(--text-light);
+            transition: color 0.3s;
+        }
+
+        .contact-method:hover { color: var(--accent-copper); }
+
+        .contact-method svg {
+            width: 20px;
+            height: 20px;
+            color: var(--accent-copper);
+        }
+
+        .contact-link {
+            color: var(--text-light);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .contact-link:hover { color: var(--accent-copper); }
+
+        /* ===== FOOTER ===== */
+        .footer {
+            background: var(--deep-charcoal);
+            padding: 48px;
+            border-top: 1px solid rgba(196, 122, 58, 0.1);
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 24px;
+        }
+
+        .footer-left {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.75rem;
+            letter-spacing: 2px;
+            color: var(--text-light);
+        }
+
+        .footer-social {
+            display: flex;
+            gap: 24px;
+        }
+
+        .footer-social a {
+            color: var(--text-light);
+            transition: all 0.3s;
+        }
+
+        .footer-social a:hover {
+            color: var(--accent-copper);
+            transform: translateY(-2px);
+        }
+
+        .footer-social svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        /* ===== REVEAL ANIMATIONS ===== */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.8s cubic-bezier(0.65, 0, 0.35, 1);
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .reveal-left {
+            opacity: 0;
+            transform: translateX(-40px);
+            transition: all 0.8s cubic-bezier(0.65, 0, 0.35, 1);
+        }
+
+        .reveal-left.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .reveal-right {
+            opacity: 0;
+            transform: translateX(40px);
+            transition: all 0.8s cubic-bezier(0.65, 0, 0.35, 1);
+        }
+
+        .reveal-right.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        /* ===== LIGHTBOX ===== */
+        .lightbox {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(10, 10, 10, 0.95);
+            z-index: 10001;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.4s;
+            backdrop-filter: blur(20px);
+        }
+
+        .lightbox.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .lightbox img {
+            max-width: 85vw;
+            max-height: 85vh;
+            object-fit: contain;
+            border: 2px solid rgba(196, 122, 58, 0.2);
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: 32px; right: 32px;
+            width: 48px; height: 48px;
+            background: none;
+            border: 1px solid rgba(245, 240, 232, 0.2);
+            color: var(--paper-white);
+            font-size: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .lightbox-close:hover {
+            border-color: var(--accent-copper);
+            color: var(--accent-copper);
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 1024px) {
+            .technique-cards { grid-template-columns: repeat(2, 1fr); }
+            .process-steps { grid-template-columns: repeat(2, 1fr); }
+            .gallery-grid { gap: 8px; }
+            .gi-1 { grid-column: span 6; min-height: 400px; }
+            .gi-2, .gi-3 { grid-column: span 6; }
+            .gi-4, .gi-5 { grid-column: span 6; }
+            .gi-6, .gi-7 { grid-column: span 12; }
+            .gi-8, .gi-9 { grid-column: span 6; }
+        }
+
+        @media (max-width: 768px) {
+            .nav { padding: 20px 24px; }
+            .nav.scrolled { padding: 14px 24px; }
+            .nav-links {
+                display: none;
+                position: fixed;
+                top: 0; left: 0;
+                width: 100%; height: 100%;
+                background: rgba(10, 10, 10, 0.98);
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                gap: 32px;
+            }
+            .nav-links.active { display: flex; }
+            .nav-links a { font-size: 1rem; letter-spacing: 4px; }
+            .hamburger { display: flex; }
+
+            section { padding: 80px 0; }
+            .container { padding: 0 24px; }
+            .gallery-grid { padding: 0 16px; gap: 8px; }
+
+            .about-grid { grid-template-columns: 1fr; gap: 48px; }
+            .about-image { order: -1; }
+            .about-stats { grid-template-columns: repeat(3, 1fr); gap: 16px; }
+
+            .technique-cards { grid-template-columns: 1fr; }
+            .process-steps { grid-template-columns: 1fr; }
+
+            .gi-1, .gi-2, .gi-3, .gi-4, .gi-5, .gi-6, .gi-7, .gi-8, .gi-9 {
+                grid-column: span 6;
+            }
+
+            .instagram-feed { grid-template-columns: repeat(2, 1fr); gap: 4px; }
+            .contact-methods { flex-direction: column; align-items: center; gap: 24px; }
+
+            .hero-cta-group { flex-direction: column; align-items: center; }
+            .btn-primary, .btn-outline { width: 260px; text-align: center; }
+        }
+
+        @media (max-width: 480px) {
+            .gi-1, .gi-2, .gi-3, .gi-4, .gi-5, .gi-6, .gi-7, .gi-8, .gi-9 {
+                grid-column: span 12;
+            }
+            .about-stats { grid-template-columns: 1fr; }
+            .stat { padding: 16px 0; }
+        }
+
+        /* ===== PARALLAX FLOATING ELEMENTS ===== */
+        .float-element {
+            position: absolute;
+            border: 1px solid rgba(196, 122, 58, 0.08);
+            pointer-events: none;
+        }
+
+        .float-1 {
+            top: 15%; right: 8%;
+            width: 120px; height: 120px;
+            transform: rotate(45deg);
+            animation: floatRotate 20s linear infinite;
+        }
+
+        .float-2 {
+            bottom: 20%; left: 5%;
+            width: 80px; height: 80px;
+            border-radius: 50%;
+            animation: floatUp 15s ease-in-out infinite;
+        }
+
+        @keyframes floatRotate {
+            to { transform: rotate(405deg); }
+        }
+
+        @keyframes floatUp {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-30px); }
+        }
+
+        /* ===== SMOOTH SECTION TRANSITIONS ===== */
+        .section-transition {
+            height: 120px;
+            background: linear-gradient(to bottom, var(--deep-charcoal), var(--ink-black));
+        }
+
+        .section-transition-reverse {
+            height: 120px;
+            background: linear-gradient(to bottom, var(--ink-black), var(--deep-charcoal));
+        }
+    </style>
+</head>
+<body>
+    <!-- Loader -->
+    <div class="loader" id="loader">
+        <div class="loader-line"></div>
+        <div class="loader-text">Adriano Marcusso</div>
+    </div>
+
+    <!-- Grain overlay -->
+    <div class="grain"></div>
+
+    <!-- Custom cursor -->
+    <div class="cursor-dot" id="cursorDot"></div>
+    <div class="cursor-ring" id="cursorRing"></div>
+
+    <!-- Lightbox -->
+    <div class="lightbox" id="lightbox">
+        <button class="lightbox-close" id="lightboxClose">&times;</button>
+        <img src="" alt="" id="lightboxImg">
+    </div>
+
+    <!-- Navigation -->
+    <nav class="nav" id="nav">
+        <a href="#" class="nav-logo">A<span>.</span>Marcusso</a>
+        <ul class="nav-links" id="navLinks">
+            <li><a href="#about">Sobre</a></li>
+            <li><a href="#technique">Técnica</a></li>
+            <li><a href="#works">Obras</a></li>
+            <li><a href="#process">Processo</a></li>
+            <li><a href="#instagram">Instagram</a></li>
+            <li><a href="#contact" class="nav-cta">Contato</a></li>
+        </ul>
+        <div class="hamburger" id="hamburger">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="hero" id="hero">
+        <div class="hero-bg"></div>
+        <div class="hero-lines"></div>
+        <div class="float-element float-1"></div>
+        <div class="float-element float-2"></div>
+        <div class="hero-content">
+            <p class="hero-overline">Printmaker &bull; Linoleum &bull; Xilo/Wood &bull; BR</p>
+            <h1 class="hero-title">
+                Adriano
+                <span class="highlight">Marcusso</span>
+            </h1>
+            <p class="hero-subtitle">Linoleum Printmaking</p>
+            <div class="hero-cta-group">
+                <a href="#works" class="btn-primary">Ver Obras</a>
+                <a href="https://www.instagram.com/amarcusso/" target="_blank" rel="noopener" class="btn-outline">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:inline;vertical-align:middle;margin-right:8px;">
+                        <rect x="2" y="2" width="20" height="20" rx="5"/>
+                        <circle cx="12" cy="12" r="5"/>
+                        <circle cx="17.5" cy="6.5" r="1.5" fill="currentColor" stroke="none"/>
+                    </svg>
+                    @amarcusso
+                </a>
+            </div>
+        </div>
+        <div class="hero-scroll">
+            <span>Scroll</span>
+            <div class="scroll-line"></div>
+        </div>
+    </section>
+
+    <!-- About -->
+    <section class="about" id="about">
+        <div class="container">
+            <div class="about-grid">
+                <div class="about-image reveal-left">
+                    <div class="about-image-frame">
+                        <img src="https://www.instagram.com/amarcusso/" alt="Adriano Marcusso"
+                             onerror="this.style.background='linear-gradient(135deg, var(--wood-brown), var(--accent-rust))'; this.style.display='block'; this.alt='Adriano Marcusso - Printmaker';"
+                             style="background: linear-gradient(135deg, #3e2723, #a0522d); min-height: 100%;">
+                    </div>
+                </div>
+                <div class="about-text reveal-right">
+                    <span class="section-label">Sobre o Artista</span>
+                    <h2 class="section-title">A arte nasce<br>das mãos e<br>da madeira</h2>
+                    <div class="divider"></div>
+                    <p class="section-desc">
+                        Adriano Marcusso é um artista visual brasileiro dedicado à arte da gravura.
+                        Especializado em <strong style="color: var(--accent-copper);">Linoleum Printmaking</strong>,
+                        xilogravura e gravura em madeira, cada obra é meticulosamente
+                        entalhada à mão, transformando blocos de linóleo e madeira em
+                        peças únicas de arte.
+                    </p>
+                    <br>
+                    <p class="section-desc">
+                        Cenógrafo de formação, com mestrado pela USP, Adriano traz uma visão
+                        única que conecta o design contemporâneo à tradição milenar da gravura.
+                        Suas obras capturam retratos, natureza e cultura brasileira com
+                        traços intensos e detalhamento excepcional.
+                    </p>
+                    <div class="about-stats">
+                        <div class="stat">
+                            <div class="stat-number" data-target="245">0</div>
+                            <div class="stat-label">Obras Publicadas</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-number" data-target="5894">0</div>
+                            <div class="stat-label">Seguidores</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-number" data-target="10">0</div>
+                            <div class="stat-label">Anos de Arte</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Marquee -->
+    <div class="marquee-section">
+        <div class="marquee-track">
+            <span class="marquee-item">Linoleum<span class="dot"></span>Printmaking<span class="dot"></span>Xilogravura<span class="dot"></span>Woodcut<span class="dot"></span>Gravura<span class="dot"></span>Arte Manual<span class="dot"></span></span>
+            <span class="marquee-item">Linoleum<span class="dot"></span>Printmaking<span class="dot"></span>Xilogravura<span class="dot"></span>Woodcut<span class="dot"></span>Gravura<span class="dot"></span>Arte Manual<span class="dot"></span></span>
+        </div>
+    </div>
+
+    <!-- Technique -->
+    <section class="technique" id="technique">
+        <div class="container">
+            <span class="section-label reveal">A Arte</span>
+            <h2 class="section-title reveal">Técnicas & Materiais</h2>
+            <p class="section-desc reveal">Cada gravura é uma peça única, resultado de um processo artesanal que une tradição e expressão contemporânea.</p>
+            <div class="technique-cards">
+                <div class="tech-card reveal">
+                    <svg class="tech-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <rect x="6" y="6" width="36" height="36" rx="2"/>
+                        <path d="M6 18h36M18 6v36"/>
+                    </svg>
+                    <h3>Linogravura</h3>
+                    <p>Gravura em linóleo entalhada à mão com goivas, criando matrizes de alta definição que produzem impressões com texturas ricas e detalhes precisos.</p>
+                </div>
+                <div class="tech-card reveal">
+                    <svg class="tech-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <path d="M24 4L4 44h40L24 4z"/>
+                        <path d="M24 18v12M24 34v2"/>
+                    </svg>
+                    <h3>Xilogravura</h3>
+                    <p>A tradição nordestina da xilogravura em madeira, com traços expressivos que capturam a força da cultura brasileira em cada entalhe.</p>
+                </div>
+                <div class="tech-card reveal">
+                    <svg class="tech-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <circle cx="24" cy="24" r="18"/>
+                        <circle cx="24" cy="24" r="10"/>
+                        <circle cx="24" cy="24" r="3"/>
+                    </svg>
+                    <h3>Impressão Manual</h3>
+                    <p>Cada impressão é feita à mão, prensa por prensa, garantindo que cada obra carrega a marca única do artista. Nenhuma é idêntica à outra.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="section-transition-reverse"></div>
+
+    <!-- Works / Gallery - Instagram Embeds Reais -->
+    <section class="works" id="works">
+        <div class="works-header">
+            <span class="section-label reveal">Portf&oacute;lio</span>
+            <h2 class="section-title reveal">Obras Selecionadas</h2>
+            <p class="section-desc reveal">Uma curadoria das gravuras publicadas no Instagram. Cada pe&ccedil;a conta uma hist&oacute;ria, cada tra&ccedil;o carrega inten&ccedil;&atilde;o.</p>
+        </div>
+        <div class="embeds-grid">
+            <div class="embed-card reveal">
+                <blockquote class="instagram-media" data-instgrm-captioned data-instgrm-permalink="https://www.instagram.com/p/C5a1Zk5uXAz/" data-instgrm-version="14" style="background:#1a1a1a; border:0; margin:0; padding:0; width:100%;"></blockquote>
+            </div>
+            <div class="embed-card reveal">
+                <blockquote class="instagram-media" data-instgrm-captioned data-instgrm-permalink="https://www.instagram.com/p/CnW5xbyOfQS/" data-instgrm-version="14" style="background:#1a1a1a; border:0; margin:0; padding:0; width:100%;"></blockquote>
+            </div>
+            <div class="embed-card reveal">
+                <blockquote class="instagram-media" data-instgrm-captioned data-instgrm-permalink="https://www.instagram.com/p/CZBzPGbLAXf/" data-instgrm-version="14" style="background:#1a1a1a; border:0; margin:0; padding:0; width:100%;"></blockquote>
+            </div>
+            <div class="embed-card reveal">
+                <blockquote class="instagram-media" data-instgrm-captioned data-instgrm-permalink="https://www.instagram.com/p/CRWV42cLSqE/" data-instgrm-version="14" style="background:#1a1a1a; border:0; margin:0; padding:0; width:100%;"></blockquote>
+            </div>
+            <div class="embed-card reveal">
+                <blockquote class="instagram-media" data-instgrm-captioned data-instgrm-permalink="https://www.instagram.com/p/CQ0bsZ0LS8y/" data-instgrm-version="14" style="background:#1a1a1a; border:0; margin:0; padding:0; width:100%;"></blockquote>
+            </div>
+            <div class="embed-card reveal">
+                <blockquote class="instagram-media" data-instgrm-captioned data-instgrm-permalink="https://www.instagram.com/p/CNm_4YSr97V/" data-instgrm-version="14" style="background:#1a1a1a; border:0; margin:0; padding:0; width:100%;"></blockquote>
+            </div>
+            <div class="embed-card reveal">
+                <blockquote class="instagram-media" data-instgrm-captioned data-instgrm-permalink="https://www.instagram.com/p/CNBDiTurOHs/" data-instgrm-version="14" style="background:#1a1a1a; border:0; margin:0; padding:0; width:100%;"></blockquote>
+            </div>
+            <div class="embed-card reveal">
+                <blockquote class="instagram-media" data-instgrm-captioned data-instgrm-permalink="https://www.instagram.com/p/CMFpk_lrqud/" data-instgrm-version="14" style="background:#1a1a1a; border:0; margin:0; padding:0; width:100%;"></blockquote>
+            </div>
+        </div>
+        <div class="gallery-more">
+            <a href="https://www.instagram.com/amarcusso/" target="_blank" rel="noopener" class="btn-primary">
+                Ver todas as 245 obras no Instagram
+            </a>
+        </div>
+    </section>
+
+    <div class="section-transition"></div>
+
+    <!-- Process -->
+    <section class="process" id="process">
+        <div class="container">
+            <div style="text-align:center; margin-bottom: 20px;">
+                <span class="section-label reveal">Como nasce uma gravura</span>
+                <h2 class="section-title reveal">O Processo</h2>
+            </div>
+            <div class="process-steps">
+                <div class="process-step reveal">
+                    <div class="step-num">01</div>
+                    <h3>Desenho</h3>
+                    <p>O esbo&ccedil;o nasce no papel, onde a composi&ccedil;&atilde;o e os detalhes s&atilde;o planejados com precis&atilde;o antes de tocar a matriz.</p>
+                </div>
+                <div class="process-step reveal">
+                    <div class="step-num">02</div>
+                    <h3>Entalhe</h3>
+                    <p>Com goivas afiadas, o lin&oacute;leo ou a madeira &eacute; cuidadosamente entalhado, removendo as &aacute;reas que ficar&atilde;o brancas na impress&atilde;o final.</p>
+                </div>
+                <div class="process-step reveal">
+                    <div class="step-num">03</div>
+                    <h3>Entintamento</h3>
+                    <p>A tinta &eacute; aplicada com rolo sobre a matriz, cobrindo apenas as superf&iacute;cies elevadas que receber&atilde;o o papel.</p>
+                </div>
+                <div class="process-step reveal">
+                    <div class="step-num">04</div>
+                    <h3>Impress&atilde;o</h3>
+                    <p>O papel &eacute; pressionado contra a matriz entintada, transferindo a imagem. Cada impress&atilde;o &eacute; &uacute;nica e irrepet&iacute;vel.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Marquee 2 -->
+    <div class="marquee-section">
+        <div class="marquee-track" style="animation-direction: reverse;">
+            <span class="marquee-item">@amarcusso<span class="dot"></span>Recife<span class="dot"></span>Pernambuco<span class="dot"></span>Brasil<span class="dot"></span>Arte Original<span class="dot"></span>Feito &agrave; M&atilde;o<span class="dot"></span></span>
+            <span class="marquee-item">@amarcusso<span class="dot"></span>Recife<span class="dot"></span>Pernambuco<span class="dot"></span>Brasil<span class="dot"></span>Arte Original<span class="dot"></span>Feito &agrave; M&atilde;o<span class="dot"></span></span>
+        </div>
+    </div>
+
+    <!-- Instagram Section -->
+    <section class="instagram-section" id="instagram">
+        <div class="container">
+            <span class="section-label reveal">Siga no Instagram</span>
+            <h2 class="section-title reveal">@amarcusso</h2>
+            <p class="section-desc reveal">Acompanhe o processo criativo, novas obras e o dia a dia do ateli&ecirc;. Cada post &eacute; uma janela para o universo da gravura.</p>
+
+            <div class="instagram-cta">
+                <a href="https://www.instagram.com/amarcusso/" target="_blank" rel="noopener" class="instagram-handle">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="2" y="2" width="20" height="20" rx="5"/>
+                        <circle cx="12" cy="12" r="5"/>
+                        <circle cx="17.5" cy="6.5" r="1.5" fill="currentColor" stroke="none"/>
+                    </svg>
+                    Seguir @amarcusso
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact -->
+    <section class="contact" id="contact">
+        <div class="contact-bg-text">CONTATO</div>
+        <div class="container">
+            <span class="section-label reveal">Vamos Conversar</span>
+            <h2 class="section-title reveal">Encomende sua<br>obra original</h2>
+            <p class="section-desc reveal">Interessado em uma gravura original ou encomenda personalizada? Entre em contato diretamente com Adriano Marcusso.</p>
+
+            <div class="contact-methods reveal">
+                <div class="contact-method">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/>
+                    </svg>
+                    <a href="https://wa.me/5581991612460" target="_blank" rel="noopener" class="contact-link">(81) 9161-2460</a>
+                </div>
+                <div class="contact-method">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="2" y="2" width="20" height="20" rx="5"/>
+                        <circle cx="12" cy="12" r="5"/>
+                        <circle cx="17.5" cy="6.5" r="1.5" fill="currentColor" stroke="none"/>
+                    </svg>
+                    <a href="https://www.instagram.com/amarcusso/" target="_blank" rel="noopener" class="contact-link">@amarcusso</a>
+                </div>
+            </div>
+
+            <a href="https://wa.me/5581991612460?text=Ol%C3%A1%20Adriano!%20Vi%20seu%20trabalho%20e%20gostaria%20de%20saber%20mais%20sobre%20suas%20gravuras." target="_blank" rel="noopener" class="btn-primary">
+                Fale pelo WhatsApp
+            </a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-left">
+                &copy; 2026 Adriano Marcusso &mdash; Linoleum Printmaking. Todos os direitos reservados.
+            </div>
+            <div class="footer-social">
+                <a href="https://www.instagram.com/amarcusso/" target="_blank" rel="noopener" aria-label="Instagram">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="2" y="2" width="20" height="20" rx="5"/>
+                        <circle cx="12" cy="12" r="5"/>
+                        <circle cx="17.5" cy="6.5" r="1.5" fill="currentColor" stroke="none"/>
+                    </svg>
+                </a>
+                <a href="https://wa.me/5581991612460" target="_blank" rel="noopener" aria-label="WhatsApp">
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+                    </svg>
+                </a>
+                <a href="https://www.facebook.com/Marcusso.art.br/" target="_blank" rel="noopener" aria-label="Facebook">
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // ===== LOADER =====
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.getElementById('loader').classList.add('hidden');
+            }, 1500);
+        });
+
+        // ===== CUSTOM CURSOR =====
+        const dot = document.getElementById('cursorDot');
+        const ring = document.getElementById('cursorRing');
+        let mouseX = 0, mouseY = 0;
+        let ringX = 0, ringY = 0;
+
+        // Only show custom cursor on non-touch devices
+        if (window.matchMedia('(pointer: fine)').matches) {
+            document.addEventListener('mousemove', (e) => {
+                mouseX = e.clientX;
+                mouseY = e.clientY;
+                dot.style.left = mouseX - 4 + 'px';
+                dot.style.top = mouseY - 4 + 'px';
+            });
+
+            function animateRing() {
+                ringX += (mouseX - ringX) * 0.15;
+                ringY += (mouseY - ringY) * 0.15;
+                ring.style.left = ringX - 20 + 'px';
+                ring.style.top = ringY - 20 + 'px';
+                requestAnimationFrame(animateRing);
+            }
+            animateRing();
+
+            // Hover effect
+            document.querySelectorAll('a, button, .gallery-item, .insta-item, .tech-card').forEach(el => {
+                el.addEventListener('mouseenter', () => ring.classList.add('hover'));
+                el.addEventListener('mouseleave', () => ring.classList.remove('hover'));
+            });
+        } else {
+            dot.style.display = 'none';
+            ring.style.display = 'none';
+        }
+
+        // ===== NAVBAR SCROLL =====
+        const nav = document.getElementById('nav');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 80) {
+                nav.classList.add('scrolled');
+            } else {
+                nav.classList.remove('scrolled');
+            }
+        });
+
+        // ===== HAMBURGER MENU =====
+        const hamburger = document.getElementById('hamburger');
+        const navLinks = document.getElementById('navLinks');
+
+        hamburger.addEventListener('click', () => {
+            hamburger.classList.toggle('active');
+            navLinks.classList.toggle('active');
+        });
+
+        navLinks.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                hamburger.classList.remove('active');
+                navLinks.classList.remove('active');
+            });
+        });
+
+        // ===== SCROLL REVEAL =====
+        const revealElements = document.querySelectorAll('.reveal, .reveal-left, .reveal-right');
+
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.15, rootMargin: '0px 0px -50px 0px' });
+
+        revealElements.forEach(el => revealObserver.observe(el));
+
+        // ===== COUNTER ANIMATION =====
+        const counters = document.querySelectorAll('.stat-number');
+        let countersAnimated = false;
+
+        const counterObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting && !countersAnimated) {
+                    countersAnimated = true;
+                    counters.forEach(counter => {
+                        const target = parseInt(counter.dataset.target);
+                        const increment = target / 60;
+                        let current = 0;
+
+                        const updateCounter = () => {
+                            current += increment;
+                            if (current < target) {
+                                counter.textContent = Math.ceil(current).toLocaleString('pt-BR');
+                                requestAnimationFrame(updateCounter);
+                            } else {
+                                counter.textContent = target.toLocaleString('pt-BR');
+                            }
+                        };
+                        updateCounter();
+                    });
+                }
+            });
+        }, { threshold: 0.5 });
+
+        counters.forEach(c => counterObserver.observe(c));
+
+        // ===== LIGHTBOX =====
+        const lightbox = document.getElementById('lightbox');
+        const lightboxImg = document.getElementById('lightboxImg');
+        const lightboxClose = document.getElementById('lightboxClose');
+
+        document.querySelectorAll('.gallery-item').forEach(item => {
+            item.addEventListener('click', () => {
+                const img = item.querySelector('img');
+                lightboxImg.src = img.src;
+                lightboxImg.alt = img.alt;
+                lightbox.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            });
+        });
+
+        lightboxClose.addEventListener('click', closeLightbox);
+        lightbox.addEventListener('click', (e) => {
+            if (e.target === lightbox) closeLightbox();
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeLightbox();
+        });
+
+        function closeLightbox() {
+            lightbox.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        // ===== SMOOTH SCROLL =====
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+
+        // ===== PARALLAX EFFECT ON HERO =====
+        window.addEventListener('scroll', () => {
+            const scrolled = window.scrollY;
+            const hero = document.querySelector('.hero-content');
+            if (hero && scrolled < window.innerHeight) {
+                hero.style.transform = `translateY(${scrolled * 0.3}px)`;
+                hero.style.opacity = 1 - (scrolled / window.innerHeight) * 0.8;
+            }
+        });
+    </script>
+    <script async src="//www.instagram.com/embed.js"></script>
+</body>
+</html>
